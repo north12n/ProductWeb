@@ -15,7 +15,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
@@ -29,13 +31,16 @@ namespace ProductWeb.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        //ใส่คลาสจัดการบทบาทเพิ่มเข้าไปเอง
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public RegisterModel(
-            UserManager<IdentityUser> userManager,
+        public RegisterModel( 
+            UserManager<IdentityUser> userManager, //โฟกัส
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            ILogger<RegisterModel> logger, //โฟกัส
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -43,6 +48,7 @@ namespace ProductWeb.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -97,13 +103,49 @@ namespace ProductWeb.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            //=========================เพิ่ม=================================
+
+            //ใส่ properties เพิ่มเข้าไปเอง
+            #region MyField
+            [Required]
+            public string FullName { get; set; }
+            public string? StreetAddress { get; set; }
+            public string? City { get; set; }
+            public string? State { get; set; }
+            public string? PostalCode { get; set; }
+            public string? Role { get; set; }
+            [ValidateNever]
+            public IEnumerable<SelectListItem> RoleList { get; set; }
+            #endregion
+            //=========================เพิ่ม=================================
+
+
         }
+
 
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+
+            //=========================เพิ่ม=================================
+            if (User.Identity.IsAuthenticated) Response.Redirect("/");
+            //ต้วเลือกบทบาทแบบรายการ อ่านมาจากฐานข้อมูล
+            Input = new InputModel
+            {
+                RoleList = _roleManager.Roles.Select(x => x.Name).Select(name => new SelectListItem
+                {
+                    Text = name,
+                    Value = name
+                })
+            };
+            //=========================เพิ่ม=================================
+
+
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+           
+
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
