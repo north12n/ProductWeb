@@ -16,6 +16,6 @@ namespace ProductWeb.Date
             optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS; Database=TestProductWeb66; Trusted_Connection=True; TrustServerCertificate=True");
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<IdentityUser> Users { get; set; }
     }
 }

@@ -144,8 +144,6 @@ namespace ProductWeb.Areas.Identity.Pages.Account
 
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-           
-
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -156,6 +154,15 @@ namespace ProductWeb.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                //=========================เพิ่ม=================================
+                //ใส่เพิ่มเข้าไปเอง
+                user.FullName = Input.FullName;
+                user.StreetAddress = Input.StreetAddress;
+                user.City = Input.City;
+                user.PostalCode = Input.PostalCode;
+                user.State = Input.State;
+                //=========================เพิ่ม=================================
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -163,6 +170,19 @@ namespace ProductWeb.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    //=========================เพิ่ม=================================
+                    #region MyRoll ก าหนดเพิ่มบทบาทให้กับผู้ใช้
+                    if (Input.Role == null)
+                    {
+                        await _userManager.AddToRoleAsync(user, SD.Role_User_Indi); //using แก้แดง
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, Input.Role);
+                    }
+                    #endregion
+                    //=========================เพิ่ม=================================
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -196,11 +216,12 @@ namespace ProductWeb.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private User CreateUser
+            ()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<User>();
             }
             catch
             {

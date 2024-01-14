@@ -2,7 +2,10 @@ global using Microsoft.EntityFrameworkCore;
 global using ProductWeb.Models;
 global using Microsoft.AspNetCore.Identity;
 global using ProductWeb.Date;
+global using ProductWeb.Utility;
+
 using ProductWeb.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,21 +14,26 @@ builder.Services.AddDbContext<ProductContext>();
 
 
 //เปลี่ยน
-builder.Services.AddDefaultIdentity<User>(options =>
+#region MyToken เพื่อเรียกใช้บริการโทเคนและบทบาทของผู้ใช้
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireDigit = false;
-}).AddRoles<IdentityRole>().AddEntityFrameworkStores<ProductContext>();
-      //เพิ่มมา ตัว Services จัดการ Role
-
+}).AddDefaultTokenProviders()
+.AddEntityFrameworkStores<ProductContext>();
+#endregion
 
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IRoleService, RoleService>();   //เพิ่ม AddScoped =======================
+
+// เพิ่ม
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -44,8 +52,13 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+//เพ่ิ่ม
+app.MapRazorPages();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
 
 app.Run();
