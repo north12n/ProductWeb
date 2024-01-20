@@ -17,5 +17,6 @@ namespace ProductWeb.Date
         }
 
         public DbSet<IdentityUser> Users { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }

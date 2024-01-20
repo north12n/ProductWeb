@@ -1,0 +1,44 @@
+﻿@model ProductWeb.Models.Category
+
+@{
+    ViewData["Title"] = "UpCreate";
+}
+
+
+<h4>Category</h4>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="UpCreate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+             
+                <input asp-for="Id" class="form-control" hidden /> 
+             
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedateTime" class="control-label"></label>
+                <input asp-for="CreatedateTime" class="form-control" />
+                <span asp-validation-for="CreatedateTime" class="text-danger"></span>
+            </div>
+       @*      ===================================== NEW ========================================== *@
+            <div class="form-group">
+                <input type="submit" value="@(Model.Id == 0 ? "Create" : "Edit")" class="btn @(Model.Id == 0 ? "btn-primary" : "btn-success") "   />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
