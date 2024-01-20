@@ -18,5 +18,8 @@ namespace ProductWeb.Date
 
         public DbSet<IdentityUser> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
+
+        //เพิ่มต้อง Migration
     }
 }
