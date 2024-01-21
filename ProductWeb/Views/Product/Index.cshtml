@@ -50,7 +50,6 @@
                     @Html.DisplayFor(modelItem => item.Category.Name)
                 </td>
             
-
                 <td>
                     <a asp-action="UpCreate" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a> |
 
@@ -67,5 +66,6 @@
         $(document).ready(function () {
             $('#myTable').DataTable();
         });
+        
     </script>
 }

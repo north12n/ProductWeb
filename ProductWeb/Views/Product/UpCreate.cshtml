@@ -46,7 +46,7 @@
             <div class="form-group">
 
                 <label asp-for="Product.ImageUrl" class="control-label"></label>
-                <input type="file" id="uploadBox" name="file"
+                <input type="file" id="uploadBox" asp-for="file"
                        class="form-control" onchange="loadFile(event)" />
             </div>
      
