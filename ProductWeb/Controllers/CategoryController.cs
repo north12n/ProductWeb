@@ -57,8 +57,6 @@ namespace ProductWeb.Controllers
             else
             {
                 //Update
-               
-
 
                 _productContext.Categories.Update(category);
                 
@@ -72,11 +70,20 @@ namespace ProductWeb.Controllers
         public IActionResult Delete(int id)
         {
             var category = _productContext.Categories.Find(id);
+            if (category != null)
+            {
+                var product= _productContext.Products.Where(p => p.CategoryId == id).FirstOrDefault();
+                if(product != null)
+                {
+                    TempData["message"] = "ไม่สามารถลบ เนื่องจากมีการใช้งานอยู่";
+                    return RedirectToAction(nameof(Index));
+                }
 
-            if (category != null )
                 _productContext.Categories.Remove(category);
-            _productContext.SaveChangesAsync();
-            TempData["message"] = "ลบสำเร็จ";
+                _productContext.SaveChangesAsync();
+                TempData["message"] = "ลบสำเร็จ";
+            }
+             
 
             return RedirectToAction(nameof(Index));
 

@@ -7,7 +7,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create"><i class="bi bi-plus-square" style="font-size: 2rem;"></i></a>
+    <a asp-action="UpCreate"><i class="bi bi-plus-square" style="font-size: 2rem;"></i></a>
 </p>
 <table class="table" id="myTable">
     <thead>
@@ -38,7 +38,7 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
+                    @Html.Raw(item.Description)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Price)
@@ -47,12 +47,15 @@
                     @Html.DisplayFor(modelItem => item.ImageUrl)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Category.Id)
+                    @Html.DisplayFor(modelItem => item.Category.Name)
                 </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a> |
+            
 
-                    <a asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-trash"></i></a>
+                <td>
+                    <a asp-action="UpCreate" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a> |
+
+                    <a asp-action="Delete" asp-route-id="@item.Id"
+                       onclick="return confirm('Are you sure ?')"><i class="bi bi-trash"></i></a>
                 </td>
             </tr>
         }

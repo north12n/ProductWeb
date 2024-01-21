@@ -1,0 +1,93 @@
+﻿@model ProductVM
+
+
+<div class="row">
+    <div class="col-8">
+
+        <form asp-action="UpCreate" enctype="multipart/form-data">
+            @* ใส่  asp-action เพื่อบอกส่งไป Form ไหน *@
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+            @* เอาค่า ID มาซ้อนไว้ *@
+            @Html.HiddenFor(Model => Model.Product.Id);
+           @*  <input hidden class="form-control" asp-for="Product.Id"> *@
+
+
+
+            <div class="mb-3">
+                <label asp-for="Product.Name"></label>
+                <input class="form-control" asp-for="Product.Name">
+                <span class="text-danger" asp-validation-for="Product.Name"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.Description"></label>
+               @*  เปลี่ยน textarea *@
+                <textarea class="form-control" asp-for="Product.Description"></textarea>
+                <span class="text-danger" asp-validation-for="Product.Description"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.Price"></label>
+               @*  เพิ่ม type *@
+                <input type="number" class="form-control" asp-for="Product.Price">
+                <span class="text-danger" asp-validation-for="Product.Price"></span>
+            </div>
+
+            <div class="mb-3">
+                <select class="form-select" asp-for="Product.CategoryId" asp-items="@Model.CategoryList">
+                    <option selected disabled>Please select category</option>
+                </select>
+                <span class="text-danger" asp-validation-for="Product.CategoryId"></span>
+
+            </div>
+
+            <div class="form-group">
+
+                <label asp-for="Product.ImageUrl" class="control-label"></label>
+                <input type="file" id="uploadBox" name="file"
+                       class="form-control" onchange="loadFile(event)" />
+            </div>
+     
+            
+            <button type="submit" class="btn  @(Model.Product.Id == 0 ? "btn-success" : "btn-danger")">
+                @(Model.Product.Id == 0 ? "Create" : "Update")
+            </button>
+            <a class="btn btn-secondary" asp-controller="Product" asp-action="Index">Back</a>
+        </form>
+    </div>
+    <div class="col-4">
+        <img src="@Model.Product.ImageUrl" width="100%" class="m-2 borderrounded" id="output" />
+    </div>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
+    <script>
+        // 1.Description
+        tinymce.init({
+            selector: 'textarea',
+            plugins: [
+                'a11ychecker', 'advlist', 'advcode', 'advtable', 'autolink', 'checklist', 'export',
+                'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace', 'visualblocks',
+                'powerpaste', 'fullscreen', 'formatpainter', 'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | formatpainter casechange blocks | bold italic backcolor | ' +
+                'alignleft aligncenter alignright alignjustify | ' +
+                'bullist numlist checklist outdent indent | removeformat | a11ycheck code table help'
+        });
+
+        // 2.ImageUrl
+        function loadFile(event) {
+            var image = document.getElementById('output');
+            image.src = URL.createObjectURL(event.target.files[0]);
+        };
+    </script>
+
+
+
+}
