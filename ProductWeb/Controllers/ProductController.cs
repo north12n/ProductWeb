@@ -21,7 +21,15 @@ namespace ProductWeb.Controllers
         public IActionResult Index()
         {
             var products = _productContext.Products.Include(p => p.Category).ToList();
-            return View(products);
+            foreach (var item in products)
+            {
+                if (!string.IsNullOrEmpty(item.ImageUrl))
+                {
+                    item.ImageUrl = SD.ProductPath + "\\" + item.ImageUrl;
+                }
+               
+            }
+            return View(products.OrderByDescending(p => p.Id));
         }
 
         public IActionResult UpCreate(int? id)
@@ -104,15 +112,29 @@ namespace ProductWeb.Controllers
                 _productContext.SaveChanges();
                 return RedirectToAction(nameof(Index));
 
-            
         }
 
         public IActionResult Delete(int id)
         {
-            var productVM = _productContext.Products.Find(id);
+            var product = _productContext.Products.Find(id);
 
-            if (productVM != null)
-                _productContext.Products.Remove(productVM);
+            if (product == null)
+            {
+                TempData["message"] = "ไม่พบข้อมูล";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (!string.IsNullOrEmpty(product.ImageUrl))
+            {
+                var oldImagePath = _webHostEnvironment.WebRootPath + SD.ProductPath + "\\" + product.ImageUrl;
+
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
+
+            _productContext.Products.Remove(product);
             _productContext.SaveChangesAsync();
             TempData["message"] = "ลบสำเร็จ";
 
