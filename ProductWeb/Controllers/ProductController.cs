@@ -80,7 +80,7 @@ namespace ProductWeb.Controllers
                     if (!Directory.Exists(uploads))Directory.CreateDirectory(uploads);
 
                     //กรณีมีรูปภาพเดิมตอ้งลบทิ้งก่อน
-                    if (productVM.Product.ImageUrl != null)
+                    if (!string.IsNullOrEmpty(productVM.Product.ImageUrl) )
                     {
                         var oldImagePath = Path.Combine(uploads, productVM.Product.ImageUrl); // ผลที่ได้ wwwroot\images\product\tset.jpg (Combine จะใส่ \ ให้อัตโนมัต๗
                         if (System.IO.File.Exists(oldImagePath))

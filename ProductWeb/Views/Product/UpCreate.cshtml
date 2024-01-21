@@ -11,6 +11,7 @@
 
             @* เอาค่า ID มาซ้อนไว้ *@
             @Html.HiddenFor(Model => Model.Product.Id);
+            @Html.HiddenFor(Model => Model.Product.ImageUrl);
            @*  <input hidden class="form-control" asp-for="Product.Id"> *@
 
 
@@ -58,7 +59,16 @@
         </form>
     </div>
     <div class="col-4">
-        <img src="@Model.Product.ImageUrl" width="100%" class="m-2 borderrounded" id="output" />
+        
+        @if (!string.IsNullOrEmpty(Model.Product.ImageUrl)) //กรณี Update
+        {
+            <img src="@(SD.ProductPath + "\\" + Model.Product.ImageUrl)" width="100%" class="m-2 borderrounded" id="output" />
+        }
+        else
+        {
+            <img width="100%" class="m-2 borderrounded" id="output" />
+        }
+
     </div>
 </div>
 
