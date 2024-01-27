@@ -32,7 +32,16 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IRoleService, RoleService>();   //เพิ่ม AddScoped =======================
 
-// เพิ่ม
+
+builder.Services.AddScoped<ShoppingCartService>();
+#region MyPath ต้องใส่เพื่อให้จดจ าเส้นทางการ Login-Logout
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+});
+#endregion
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddRazorPages();
 
