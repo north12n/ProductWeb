@@ -16,10 +16,12 @@ namespace ProductWeb.Date
             optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS; Database=TestProductWeb66; Trusted_Connection=True; TrustServerCertificate=True");
         }
 
-        public DbSet<IdentityUser> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<OrderHeader> OrderHeaders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
         //เพิ่มต้อง Migration
     }

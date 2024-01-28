@@ -50,8 +50,13 @@
                            
                         </div>
                     </li>
+
+                    @*  เพิ่ม *@
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index"><i class="bi bi-cart3"></i></a>
+                    </li>
+
                 </ul>
-               
             </div>
             <partial name="_LoginPartial"/>
         </div>
@@ -79,6 +84,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script> 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
     <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
